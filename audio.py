@@ -44,10 +44,14 @@ for length, training_data in zip(lens_of_persons,train_persons):
     tmp = length * np.cov(training_data.T, bias=True)
     covariance_weights.append(tmp)
 
-cov_wc = np.sum(covariance_weights) / np.sum(lens_of_persons)
+sum_cov = 0
+for cov_w in covariance_weights:
+    sum_cov += cov_w
+
+cov_wc = sum_cov / np.sum(lens_of_persons)
 cov_ac = cov_tot - cov_wc
 d, e = scipy.linalg.eigh(cov_ac, cov_wc, eigvals=(dim-1, dim-1))
 plt.figure()
 junk = plt.hist(train_persons[0].dot(e), 40, histtype='step', color='b', normed=True)
-junk = plt.hist(train_persons[0].dot(e), 40, histtype='step', color='r', normed=True)
+junk = plt.hist(train_persons[1].dot(e), 40, histtype='step', color='r', normed=True)
 plt.show()
