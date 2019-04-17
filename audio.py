@@ -26,15 +26,28 @@ for train_person in train_persons_pca:
 
 plt.plot(train_persons[0][:, 1], train_persons[0][:, 0], 'b.', ms=1)
 plt.plot(train_persons[1][:, 1], train_persons[1][:, 0], 'r.', ms=1)
-
 plt.plot(train_persons[2][:, 1], train_persons[2][:, 0], 'y.', ms=1)
 plt.plot(train_persons[3][:, 1], train_persons[3][:, 0], 'c.', ms=1)
-
 plt.plot(train_persons[4][:, 1], train_persons[4][:, 0], 'g.', ms=1)
 plt.plot(train_persons[5][:, 1], train_persons[5][:, 0], 'k.', ms=1)
-
 plt.plot(train_persons[6][:, 1], train_persons[6][:, 0], 'm.', ms=1)
-
-
 plt.show()
 
+
+lens_of_persons = []
+for person in train_persons:
+    lens_of_persons.append(len(person))
+
+
+covariance_weights = []
+for length, training_data in zip(lens_of_persons,train_persons):
+    tmp = length * np.cov(training_data.T, bias=True)
+    covariance_weights.append(tmp)
+
+cov_wc = np.sum(covariance_weights) / np.sum(lens_of_persons)
+cov_ac = cov_tot - cov_wc
+d, e = scipy.linalg.eigh(cov_ac, cov_wc, eigvals=(dim-1, dim-1))
+plt.figure()
+junk = plt.hist(train_persons[0].dot(e), 40, histtype='step', color='b', normed=True)
+junk = plt.hist(train_persons[0].dot(e), 40, histtype='step', color='r', normed=True)
+plt.show()
