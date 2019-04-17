@@ -5,3 +5,5 @@ demo_*
 venv/
 
 .DS_Store
+
+*.pyc
