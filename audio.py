@@ -23,11 +23,18 @@ train_persons_pca = []
 for train_person in train_persons_pca:
     train_persons_pca.append(train_person.dot(e))
 
-colors = ['m','k','g','c','y','r','b']
-for pca, color in zip(train_persons_pca,colors):
-    plt.plot(pca[:, 1], pca[:, 0], color+'.', ms=1)
-    if color == 'k':
-        break
+
+plt.plot(train_persons[0][:, 1], train_persons[0][:, 0], 'b.', ms=1)
+plt.plot(train_persons[1][:, 1], train_persons[1][:, 0], 'r.', ms=1)
+
+plt.plot(train_persons[2][:, 1], train_persons[2][:, 0], 'y.', ms=1)
+plt.plot(train_persons[3][:, 1], train_persons[3][:, 0], 'c.', ms=1)
+
+plt.plot(train_persons[4][:, 1], train_persons[4][:, 0], 'g.', ms=1)
+plt.plot(train_persons[5][:, 1], train_persons[5][:, 0], 'k.', ms=1)
+
+plt.plot(train_persons[6][:, 1], train_persons[6][:, 0], 'm.', ms=1)
 
 
 plt.show()
+
