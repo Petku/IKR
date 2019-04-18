@@ -4,7 +4,7 @@ import scipy.linalg
 import numpy as np
 from numpy.random import randint
 
-count_of_gausses_for_one_person = 13
+count_of_gausses_for_one_person = 6
 count_of_people_to_distinct = 31
 
 train_persons = []
@@ -95,18 +95,33 @@ for i in range(30):
 
         print("Iteration: {0}, TTL: {1}, Person{2}.".format(i, TTL, j))
 
+def get_class_and_name(name):
+    p = name.split('/')
+    try:
+        i = int(p[1])
+    except ValueError:
+        i = 0
+
+    return i, p[2][:-4]
+
 
 score = []
 ll_values = []
+hit_ratio = 0
+alltest = 0
 for i in range(31):
     for name, tst in tests_persons[i].items():
         del score[:]
         del ll_values[:]
+        i, name = get_class_and_name(name)
         score.append(name)
         for gmm in persons_gmms:
             llv = logpdf_gmm(tst, gmm.weight, gmm.mean, gmm.cov)
             ll_values.append(sum(llv) + np.log(0.03))
         score.append(np.argmax(ll_values) + 1)
+        if score[-1] == i : hit_ratio+=1
         score.extend(ll_values)
         print score
+        alltest += 1
 
+print(hit_ratio/float(alltest) * 100)
