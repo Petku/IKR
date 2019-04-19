@@ -17,16 +17,12 @@ Pred spustením:
 ---------------
 
 Pred spustením si odporúčame vytvoriť virtuálne prostredie pomocou nástroja virtualenv. 
-Návod na jeho inštaláciu a použitie je možno nájsť na tejto adrese:
-
-https://docs.python-guide.org/dev/virtualenvs/?fbclid=IwAR0AQKG4V74v32bVtJk9VYnh3SiYTm9QpntTPUArxuQoMA0wuTLTJ9WFCWs
-
+V nom potom už len stačí zadat "pip install -r requirements.txt"  a budú nainštalované všetky potrebné knižnice.
 
 Použité knižnice:
 -----------------
-sklearn
+sklearn - scikit
 numpy
-__future__
 time
 ikrlib
 
@@ -36,6 +32,7 @@ o metódu flatten(), wav16khz2mfcc) logpdf_gmm a train_gmm.
 
 Spustenie skriptov:
 -------------------
+Pri spustení musia byť skripty v rovnakom priečinku ako sú dáta v repozitároch dev/ train/ a eval/
 ./python2.7 image_neural_network.py
 ./python2.7 audio.py
 
