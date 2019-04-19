@@ -17,7 +17,7 @@ Pred spustením:
 ---------------
 
 Pred spustením si odporúčame vytvoriť virtuálne prostredie pomocou nástroja virtualenv. 
-V nom potom už len stačí zadat "pip install -r requirements.txt"  a budú nainštalované všetky potrebné knižnice.
+V ňom potom už len stačí zadat "pip install -r requirements.txt"  a budú nainštalované všetky potrebné knižnice.
 
 Použité knižnice:
 -----------------
