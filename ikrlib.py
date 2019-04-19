@@ -308,7 +308,7 @@ def png2fea(dir_name):
     features = {}
     for f in glob(dir_name + '/*.png'):
         print('Processing file: ', f)
-        features[f] = imread(f, True).astype(np.float64)
+        features[f] = np.array(imread(f, True).astype(np.float64)).flatten()
     return features
 
 def demo_gmm():
