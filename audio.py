@@ -119,6 +119,7 @@ for i in range(31):
             llv = logpdf_gmm(tst, gmm.weight, gmm.mean, gmm.cov)
             ll_values.append(sum(llv) + np.log(0.03))
         score.append(np.argmax(ll_values) + 1)
+
         if score[-1] == i : hit_ratio+=1
         score.extend(ll_values)
         print score
