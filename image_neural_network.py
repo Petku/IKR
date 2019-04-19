@@ -19,16 +19,19 @@ for number in range(1, 32):
     train_persons_classes.extend([number] *len(train_person))
     #train_persons[number-1] = np.vstack(train_persons[number-1])
 
-test_persons = []
-test_persons_classes = []
-test_filenames = []
 for number in range(1, 32):
-    tst = png2fea('dev/' + str(number) + '/')
-    test_filenames.extend(tst.keys())
-    test_person = tst.values()
-    test_persons.extend(test_person)
-    test_persons_classes.extend([number] *len(test_person))
+    train_person = png2fea('dev/' + str(number) + '/').values()
+    train_persons.extend(train_person)
+    train_persons_classes.extend([number] *len(train_person))
     #train_persons[number-1] = np.vstack(train_persons[number-1])
+
+test_persons = []
+test_filenames = []
+tst = png2fea('eval/')
+test_filenames.extend(tst.keys())
+test_person = tst.values()
+test_persons.extend(test_person)
+#train_persons[number-1] = np.vstack(train_persons[number-1])
 
 w = 80
 h = 80
@@ -89,14 +92,8 @@ t0 = time()
 test_classes_Predictions = clf.predict_log_proba(test_persons_pca)
 print("done in %0.3fs" % (time() - t0))
 
-hit_ratio = 0
-all_tests = len(test_classes_Predictions)
-for file, expected, probab in zip(test_filenames, test_persons_classes, test_classes_Predictions):
-    file = file.split('/')[2][:-4]
+for file, probab in zip(test_filenames, test_classes_Predictions):
+    file = file.split('/')[1][:-4]
     hard_decision = 1 + np.argmax(probab)
     print("[{0}, {1}, {2}]".format(file, hard_decision, ', '.join([str(x) for x in probab.tolist()])))
-    if expected == hard_decision:
-        hit_ratio+=1
-
-print(hit_ratio/float(all_tests))
 
