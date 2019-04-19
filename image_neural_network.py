@@ -1,15 +1,10 @@
 from __future__ import print_function
-
-import matplotlib.pyplot as plt
-from ikrlib import png2fea, logpdf_gauss, train_gauss, train_gmm, logpdf_gmm
-import scipy.linalg
+from ikrlib import png2fea
 import numpy as np
-from numpy.random import randint
 from time import time
-from sklearn.model_selection import GridSearchCV
 from sklearn.decomposition import PCA
-from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
+
 
 train_persons = []
 train_persons_classes = []
@@ -95,5 +90,5 @@ print("done in %0.3fs" % (time() - t0))
 for file, probab in zip(test_filenames, test_classes_Predictions):
     file = file.split('/')[1][:-4]
     hard_decision = 1 + np.argmax(probab)
-    print("[{0}, {1}, {2}]".format(file, hard_decision, ', '.join([str(x) for x in probab.tolist()])))
+    print("{0} {1} {2}]".format(file, hard_decision, ' '.join([str(x) for x in probab.tolist()])))
 
