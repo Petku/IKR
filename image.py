@@ -68,8 +68,9 @@ print("Fitting the classifier to the training set")
 t0 = time()
 param_grid = {'C': [1e3, 5e3, 1e4, 5e4, 1e5],
               'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1], }
-clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced', probability=True), param_grid, cv=5)
-#clf = MLPClassifier(hidden_layer_sizes=(1024,), batch_size=256, verbose=True, early_stopping=True)
+#clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced',probability=True), param_grid, cv=5)
+clf = MLPClassifier(hidden_layer_sizes=(800,), activation='logistic', learning_rate='adaptive', alpha=1e-4,
+                                     max_iter=1000, random_state=1)
 clf = clf.fit(train_persons_pca, train_persons_classes)
 print("done in %0.3fs" % (time() - t0))
 print("Best estimator found by grid search:")
@@ -82,16 +83,18 @@ print("Best estimator found by grid search:")
 print("Predicting people's names on the test set")
 t0 = time()
 
-test_classes_Predictions = clf.predict(test_persons_pca)
+#test_classes_Predictions = clf.predict(test_persons_pca)
+test_classes_Predictions = clf.predict_log_proba(test_persons_pca)
 print("done in %0.3fs" % (time() - t0))
 
 hit_ratio = 0
 all_tests = len(test_classes_Predictions)
 
-pred_proba = clf.predict_log_proba(test_persons_pca)
-for file, expected, returned, log_prob in zip(test_filenames, test_persons_classes, test_classes_Predictions, pred_proba):
-    print(file, returned, *log_prob, sep=', ')
-    if expected == returned:
+for file, expected, probab in zip(test_filenames, test_persons_classes, test_classes_Predictions):
+    file = file.split('/')[2][:-4]
+    hard_decision = 1 + np.argmax(probab)
+    print("[{0}, {1}, {2}]".format(file, hard_decision, ', '.join([str(x) for x in probab.tolist()])))
+    if expected == hard_decision:
         hit_ratio+=1
 
 print(hit_ratio/float(all_tests))
