@@ -87,8 +87,9 @@ t0 = time()
 test_classes_Predictions = clf.predict_log_proba(test_persons_pca)
 print("done in %0.3fs" % (time() - t0))
 
-for file, probab in zip(test_filenames, test_classes_Predictions):
-    file = file.split('/')[1][:-4]
-    hard_decision = 1 + np.argmax(probab)
-    print("{0} {1} {2}]".format(file, hard_decision, ' '.join([str(x) for x in probab.tolist()])))
+with open("image_res", "w") as f:
+    for file, probab in zip(test_filenames, test_classes_Predictions):
+        file = file.split('/')[1][:-4]
+        hard_decision = 1 + np.argmax(probab)
+        f.write("{0} {1} {2}\n".format(file, hard_decision, ' '.join([str(x) for x in probab.tolist()])))
 
