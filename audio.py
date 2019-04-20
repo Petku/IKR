@@ -1,10 +1,8 @@
-import matplotlib.pyplot as plt
-from ikrlib import wav16khz2mfcc, logpdf_gauss, train_gauss, train_gmm, logpdf_gmm
-import scipy.linalg
+from ikrlib import wav16khz2mfcc, train_gmm, logpdf_gmm
 import numpy as np
 from numpy.random import randint
 
-count_of_gausses_for_one_person = 6
+count_of_gausses_for_one_person = 8
 count_of_people_to_distinct = 31
 
 train_persons = []
@@ -13,57 +11,8 @@ for number in range(1, 32):
     train_persons.append(train_person)
     train_persons[number-1] = np.vstack(train_persons[number-1])
 
-tests_persons = []
-for number in range(1, 32):
-    test_person = wav16khz2mfcc('dev/' + str(number) + '/')
-    tests_persons.append(test_person)
-
+test_persons = wav16khz2mfcc('eval/')
 dim = train_persons[0].shape[1]
-
-# PCA reduction to 2 dimensions
-
-# cov_tot = np.cov(np.vstack(train_persons).T, bias=True)
-# # take just 2 largest eigenvalues and corresponding eigenvectors
-# d, e = scipy.linalg.eigh(cov_tot, eigvals=(dim-2, dim-1))
-#
-# train_persons_pca = []
-# for train_person in train_persons_pca:
-#     train_persons_pca.append(train_person.dot(e))
-#
-#
-# plt.plot(train_persons[0][:, 1], train_persons[0][:, 0], 'b.', ms=1)
-# plt.plot(train_persons[1][:, 1], train_persons[1][:, 0], 'r.', ms=1)
-# plt.plot(train_persons[2][:, 1], train_persons[2][:, 0], 'y.', ms=1)
-# plt.plot(train_persons[3][:, 1], train_persons[3][:, 0], 'c.', ms=1)
-# plt.plot(train_persons[4][:, 1], train_persons[4][:, 0], 'g.', ms=1)
-# plt.plot(train_persons[5][:, 1], train_persons[5][:, 0], 'k.', ms=1)
-# plt.plot(train_persons[6][:, 1], train_persons[6][:, 0], 'm.', ms=1)
-# plt.show()
-#
-#
-# lens_of_persons = []
-# for person in train_persons:
-#     lens_of_persons.append(len(person))
-#
-#
-# covariance_weights = []
-# for length, training_data in zip(lens_of_persons,train_persons):
-#     tmp = length * np.cov(training_data.T, bias=True)
-#     covariance_weights.append(tmp)
-#
-# sum_cov = 0
-# for cov_w in covariance_weights:
-#     sum_cov += cov_w
-#
-# cov_wc = sum_cov / np.sum(lens_of_persons)
-# cov_ac = cov_tot - cov_wc
-# d, e = scipy.linalg.eigh(cov_ac, cov_wc, eigvals=(dim-1, dim-1))
-# plt.figure()
-# junk = plt.hist(train_persons[0].dot(e), 40, histtype='step', color='b', normed=True)
-# junk = plt.hist(train_persons[1].dot(e), 40, histtype='step', color='r', normed=True)
-# plt.show()
-#
-# apriory_prob_arr = np.full((1, 31), 0.03)
 
 
 class PersonGmm(object):
@@ -93,36 +42,30 @@ for i in range(30):
         persons_gmms[j].cov = C
         persons_gmms[j].mean = M
 
-        print("Iteration: {0}, TTL: {1}, Person{2}.".format(i, TTL, j))
 
-def get_class_and_name(name):
+def get_name(name):
     p = name.split('/')
-    try:
-        i = int(p[1])
-    except ValueError:
-        i = 0
-
-    return i, p[2][:-4]
+    return p[1].split(".wav")[0]
 
 
 score = []
 ll_values = []
 hit_ratio = 0
 alltest = 0
-for i in range(31):
-    for name, tst in tests_persons[i].items():
+
+with open("audio_GMM", "w") as f:
+    for name, tst in test_persons.items():
         del score[:]
         del ll_values[:]
-        i, name = get_class_and_name(name)
+        name = get_name(name)
         score.append(name)
         for gmm in persons_gmms:
             llv = logpdf_gmm(tst, gmm.weight, gmm.mean, gmm.cov)
             ll_values.append(sum(llv) + np.log(0.03))
         score.append(np.argmax(ll_values) + 1)
 
-        if score[-1] == i : hit_ratio+=1
         score.extend(ll_values)
-        print score
+        final_string = " ".join([str(data) for data in score])
+        f.write(final_string + '\n')
         alltest += 1
 
-print(hit_ratio/float(alltest) * 100)

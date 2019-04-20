@@ -293,10 +293,9 @@ def wav16khz2mfcc(dir_name):
     """
     features = {}
     for f in glob(dir_name + '/*.wav'):
-        print('Processing file: ', f)
         rate, s = wavfile.read(f)
         assert(rate == 16000)
-        features[f] = mfcc(s, 400, 240, 512, 16000, 23, 13)
+        features[f] = mfcc(s[3200:], 400, 240, 512, 16000, 23, 13)
     return features
 
 
