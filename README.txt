@@ -33,13 +33,18 @@ o metódu flatten(), wav16khz2mfcc) logpdf_gmm a train_gmm.
 Spustenie skriptov:
 -------------------
 Pri spustení musia byť skripty v rovnakom priečinku ako sú dáta v repozitároch dev/ train/ a eval/
-./python2.7 image_neural_network.py
-./python2.7 audio.py
+python image_neural_network.py
+python audio.py
+Pričom python by mal mať vo svojej ceste už vyššie spomenuté requirements.
+V prípade, že ste requirements inštalovali bez virtuálneho prostredia tak použite python.
+V opačnom prípade ./meno_virtualneho_prostredia/bin/python použite tuto binarku namiesto python.
 
 
 Získanie výsledkov:
 -------------------
-Výsledky identifikácie možno získať spustením jednotlivých skriptov, ktoré ich vypíšu na //TODO stdout/súboru.
+Výsledky identifikácie možno získať spustením jednotlivých skriptov, ktoré ich vypíšu do suboru.
+audio.py - výpis pojde do audio_GMM suboru.
+image_neural_network.py - výpis pojde do image_NN suboru.
 
 
 Použita verzia Pythonu: 2.7

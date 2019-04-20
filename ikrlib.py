@@ -1,5 +1,7 @@
 from glob import glob
-import matplotlib.pyplot as plt
+import matplotlib as plt
+plt.use('TkAgg')
+
 import matplotlib.animation as animation
 from math import log
 import mpl_toolkits.mplot3d
